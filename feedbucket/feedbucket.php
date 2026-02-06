@@ -3,7 +3,7 @@
  * Plugin Name: Feedbucket
  * Plugin URI: https://feedbucket.app
  * Description: Enabling your clients and team members to submit feedback with screenshots and video recording directly on your WordPress site.
- * Version: 1.0.8
+ * Version: 1.0.10
  * Author: Feedbucket
  * Author URI: https://feedbucket.app
  */
@@ -140,7 +140,7 @@ function feedbucket_script() {
         $scriptHtml .= '
         <script type="text/javascript">
             (function(k) {
-                s=document.createElement("script");s.module=true;s.defer=true;
+                let s=document.createElement("script");s.defer=true;
                 s.src="'.esc_url("https://cdn.feedbucket.app/assets/feedbucket.js").'";
                 s.dataset.feedbucket=k;document.head.appendChild(s);
             })("'.esc_js($options['key']).'")
@@ -180,7 +180,8 @@ function feedbucket_add_script() {
         !is_array($options['roles']) ||
         !$options['enable'] ||
         in_bricks_builder() ||
-        in_elementor_preview()
+        in_elementor_preview() ||
+        in_cornerstone_preview()
     ) {
         return;
     }
@@ -222,4 +223,32 @@ function in_elementor_preview() {
     return isset($_GET['elementor-preview']) || 
         isset($_GET['elementor_library']) || 
         (isset($_GET['action']) && $_GET['action'] === 'elementor');
+}
+
+/**
+ * Cornerstone is another builder that has an iFrame preview in Admin. We do 
+ * not want to add the script there.
+ */
+function in_cornerstone_preview() {
+    // Preview: fired before the preview starts rendering.
+    if (did_action('cs_before_preview_frame')) {
+        return true;
+    }
+
+    // Preview: indicates we are rendering inside the preview context.
+    if (did_action('cs_element_rendering')) {
+        return true;
+    }
+
+    // Helper (Cornerstone 7.5.11+).
+    if (function_exists('is_cornerstone_preview')) {
+        return (bool) is_cornerstone_preview();
+    }
+
+    // Builder UI boot (editor context).
+    if (did_action('cornerstone_before_boot_app')) {
+        return true;
+    }
+
+    return false;
 }

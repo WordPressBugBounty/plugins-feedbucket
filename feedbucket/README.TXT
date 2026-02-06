@@ -2,8 +2,8 @@
 Contributors: feedbucket
 Tags: feedback, feedback widget, visual feedback, website feedback, bug-tracking
 Requires at least: 4.7
-Tested up to: 6.8
-Stable tag: 1.0.8
+Tested up to: 6.9
+Stable tag: 1.0.10
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -91,6 +91,9 @@ Yes, it works with WooCommerce
 4. Granular control of who sees Feedbucket in the plugin settings.
 
 == Changelog ==
+
+= 1.0.9 =
+* Updated the script to the new version to not collide with other plugins.
 
 = 1.0.8 =
 * Not showing Feedbucket widget in Elementor preview.
